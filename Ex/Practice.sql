@@ -3,8 +3,8 @@ select first_name, last_name, salary, phone_number, email, hire_date from employ
 
 select first_name as 이름, phone_number as 전화번호, hire_date as 입사일, salary as 급여 from employees;
 select employee_id 사원번호, first_name 이름, last_name 성, salary 급여, phone_number 전화번호,
-email 이메일, hire_date 입사일 from employees;
+email 이메일, hire_date 입사일 from employees; /* temporary name change */
 
-select first_name || ' ' || last_name from employees;
+select first_name || ' ' || last_name from employees; /* string concatenation */
 
-select salary*12 from employees;
+select salary*12 from employees; /* operators */
