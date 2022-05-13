@@ -96,5 +96,7 @@ select first_name "First Name",
 from employees
 order by salary desc;
 
+
+
 select to_date('2022')
 from dual;
