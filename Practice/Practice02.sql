@@ -42,7 +42,7 @@ from employees;
 평균임금과 최저임금의 차이가 2000 미만인 부서(department_id), 평균임금, 최저임금 그리
 고 (평균임금 – 최저임금)를 (평균임금 – 최저임금)의 내림차순으로 정렬해서 출력하세요.
 */
-select department_id, avg(salary), min(salary), avg(salary) - min(salary)
+select department_id 부서, avg(salary) 평균임금, min(salary) 최저임금, avg(salary) - min(salary) 임금차이
 from employees
 group by department_id
 having avg(salary) - min(salary) < 2000
@@ -52,7 +52,7 @@ order by avg(salary) - min(salary) desc;
 업무(JOBS)별로 최고임금과 최저임금의 차이를 출력해보세요.
 차이를 확인할 수 있도록 내림차순으로 정렬하세요.
 */
-select job_id, max(salary) - min(salary) Difference
+select job_id 업무, max(salary) - min(salary) 임금차이
 from employees
 group by job_id
 order by Difference desc;
@@ -62,19 +62,20 @@ order by Difference desc;
 출력은 관리자별로 평균급여가 5000이상 중에 평균급여 최소급여 최대급여를 출력합니다.
 평균급여의 내림차순으로 정렬하고 평균급여는 소수점 첫째짜리에서 반올림 하여 출력합니다.
 */
-select round(avg(salary), 1), min(salary), max(salary)
+select round(avg(salary), 1) 평균급여, min(salary) 최소급여, max(salary) 최대급여
 from employees
 where hire_date > '2005-12-31'
 group by manager_id
-having avg(salary) >= 5000;
+having avg(salary) >= 5000
+order by avg(salary) desc;
 
 /* 문제10
 아래회사는 보너스 지급을 위해 직원을 입사일 기준으로 나눌려고 합니다.
-입사일이 02/12/31일 이전이면 '창립맴버, 03년은 '03년입사’, 04년은 ‘04년입사’
+입사일이 02/12/31일 이전이면 '창립맴버', 03년은 '03년입사’, 04년은 ‘04년입사’
 이후입사자는 ‘상장이후입사’ optDate 컬럼의 데이터로 출력하세요.
 정렬은 입사일로 오름차순으로 정렬합니다.
 */
-select employee_id, hire_date,
+select first_name, hire_date,
 	   case when hire_date < '02/12/31' then '창립멤버'
 			when hire_date < '03/12/31' then '03년입사'
 			when hire_date < '04/12/31' then '04년입사'
