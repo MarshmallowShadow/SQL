@@ -80,8 +80,8 @@ order by length(department_name) desc;
 */
 select country_name
 from departments dep, locations loc, countries co
-where dep.location_id = loc.location_id and
-        loc.country_id = co.country_id
+where dep.location_id = loc.location_id(+) and
+        loc.country_id = co.country_id(+)
 group by country_name;
 
 /*문제10.
