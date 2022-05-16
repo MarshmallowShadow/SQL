@@ -218,14 +218,24 @@ where em.department_id = de.department_id or
 --left outer join
 select first_name, em.department_id, 
        department_name, de.department_id
+from employees em, left outer join departments de
+where em.department_id = de.department_id; --em에서 department_id가 null일 경우에도 (+)를 통해서 null있는 데이터 출력 가능
+	   
+select first_name, em.department_id, 
+       department_name, de.department_id
 from employees em, departments de
-where em.department_id = de.department_id(+); --em에서 department_id가 null일 경우에도 (+)를 통해서 null있는 데이터 출력 가능
+where em.department_id = de.department_id(+); --oracle에서만 지원
 
 --right outer join
 select first_name, em.department_id, 
        department_name, de.department_id
+from right outer join employees em, departments de
+where em.department_id = de.department_id; --left랑 right는 테이블의 위치 차이 (왼쪽테이블 기준으로 오른쪽에만 null이 없을 경우 출력)
+
+select first_name, em.department_id, 
+       department_name, de.department_id
 from employees em, departments de
-where em.department_id(+) = de.department_id; --left랑 right는 테이블의 위치 차이 (왼쪽테이블 기준으로 오른쪽에만 null이 없을 경우 출력)
+where em.department_id(+) = de.department_id;  --oracle에서만 지원
 
 --full outer join
 select first_name, em.department_id, 
