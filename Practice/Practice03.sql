@@ -108,3 +108,9 @@ select e.employee_id 사번, e.first_name 이름, department_name 부서명, m.f
 from employees e, employees m, departments d
 where e.manager_id = m.employee_id and
       e.department_id = d.department_id(+);
+
+select e.employee_id 사번, e.first_name 이름, department_name 부서명, m.first_name "메니저 이름"
+from employees m, employees e
+left outer join departments d
+on e.department_id = d.department_id
+where e.manager_id = m.employee_id;

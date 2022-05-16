@@ -82,4 +82,71 @@ where e.department_id = d.department_id and
 	  e.job_id = j.job_id;
 
 
-	  
+--<5월 16일 수업>
+--< EQ join > : null값은 포함하지 않는다.
+SELECT  e.first_name,
+        e.department_id,
+        d.department_name,
+        d.department_id
+FROM employees e, departments d
+where e.department_id = d.department_id;
+
+--위 EQ join과 아래 left join 값 동일함!
+
+--< left outer join > : null값 포함
+SELECT  e.first_name,
+        e.department_id,
+        d.department_name,
+        d.department_id
+FROM employees e left outer join departments d
+on e.department_id = d.department_id;
+
+--<오라클 사용법> 107개
+SELECT  e.first_name,
+        e.department_id,
+        d.department_name,
+        d.department_id
+FROM employees e, departments d
+where e.department_id = d.department_id(+);
+
+
+--< right outer join > : null값 포함
+SELECT  e.first_name,
+        e.department_id,
+        d.department_name,
+        d.department_id
+FROM employees e right outer join departments d
+on e.department_id = d.department_id;
+
+--오라클 사용법 / ppt 참고
+SELECT  e.first_name,
+        e.department_id,
+        d.department_name,
+        d.department_id
+FROM employees e, departments d
+where e.department_id(+) = d.department_id;
+
+--<full outer join> 양쪽 모두 선택
+SELECT  e.first_name,
+        e.department_id, 
+        d.department_name, 
+        d.department_id
+FROM employees e full outer join departments d
+on e.department_id = d.department_id;
+
+--<self join> ==>> 매우 중요
+SELECT *
+FROM employees e1, employees e2
+where e1.manager_id = e2.employee_id;
+
+--<self join> 매니져의 이름과 전화번호
+SELECT e.employee_id,
+        e.first_name,
+        e.salary,
+        e.phone_number,
+        e.manager_id,
+        m.employee_id,
+        m.first_name,
+        m.phone_number
+FROM employees e,employees m
+where e.manager_id = m.employee_id;
