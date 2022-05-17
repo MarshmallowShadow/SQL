@@ -114,3 +114,12 @@ from employees m, employees e
 left outer join departments d
 on e.department_id = d.department_id
 where e.manager_id = m.employee_id;
+
+SELECT  em.employee_id 사번,
+        em.first_name 이름,
+        department_name 부서명,
+        ma.first_name "매니저 이름"
+FROM employees ma, employees em 
+LEFT OUTER JOIN departments de
+ON de.department_id = em.department_id
+where em.manager_id =  ma.employee_id;
