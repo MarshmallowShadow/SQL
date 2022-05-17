@@ -36,6 +36,19 @@ where salary in (select salary
 
 select first_name, salary
 from employees
-where salary in (select max(salary)
-				 from employees
-				 group by(department_id));
+where (department_id, salary) in (select department_id, max(salary)
+                                  from employees
+                                  group by department_id);
+
+select first_name, salary
+from employees
+where (department_id, salary) in ((100, 12008), (30, 11000), (90, 24000), (20, 13000), 
+                                  (70, 10000), (110, 12008), (50, 8200), (80, 14000), 
+                                  (40, 6500), (60, 9000), (10, 4400)); --the long way
+
+select e.department_id, e.employee_id, e.first_name, e.salary
+from employees e, (select department_id, max(salary) salary
+				   from employees
+				   group by department_id) d
+where d.salary = e.salary and 
+	  d.department_id = e.department_id;

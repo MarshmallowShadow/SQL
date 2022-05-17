@@ -11,6 +11,7 @@ select first name || ' ' || last_name "이름",
 from employees
 order by hire_date asc;
 
+
 /* 문제 2. 업무( jobs)별로 업무이름( job_title)과 최고월급(max_salary)을 월급의 내림차순(DESC)로 정렬 하세요. */
 select job_title 업무이름,
 	   max_salary 최고월급
@@ -30,7 +31,8 @@ from employees
 where salary > 3000 and
 	  manager_id is not null and
 	  commission_pct is null;
-	  
+
+
 /* 문제4.
 최고월급(max_salary)이 10000 이상인 업무의 이름( job_title)과 최고월급(max_salary)을
 최고월급의(max_salary) 내림차순(DESC)로 정렬하여 출력하세요.
@@ -40,6 +42,7 @@ select job_title 업무이름,
 from jobs
 where max_salary >= 10000
 order by max_salary desc;
+
 
 /* 문제5.
 월급이 14000 미만 10000 이상인 직원의 이름(first_name), 월급, 커미션퍼센트 를 월급순
@@ -53,6 +56,7 @@ where salary >= 10000 and
 	  salary < 14000
 order by salary desc;
 
+
 /* 문제6.
 부서번호가 10, 90, 100 인 직원의 이름, 월급, 입사일, 부서번호를 나타내시오
 입사일은 1977-12 와 같이 표시하시오
@@ -63,16 +67,19 @@ select first_name || ' ' || last_name 이름,
 	   department_id 부서번호
 from employees;
 
+
 /* 문제7. 이름(first_name)에 S 또는 s 가 들어가는 직원의 이름, 월급을 나타내시오 */
 select first_name 이름, salary 월급
 from employees
 where first_name like '%s%' or
 	  first_name like '%S%';
-	  
+
+
 /* 문제8. 전체 부서를 출력하려고 합니다. 순서는 부서이름이 긴 순서대로 출력해 보세오 */
 select department_name
 from departments
 order by length(department_name) desc;
+
 
 /*문제9.
 정확하지 않지만, 지사가 있을 것으로 예상되는 나라들을 나라이름을 대문자로 출력하고
@@ -83,6 +90,13 @@ from departments dep, locations loc, countries co
 where dep.location_id = loc.location_id(+) and
         loc.country_id = co.country_id(+)
 group by country_name;
+
+--subQuery를 이용한 방식
+select country_name
+from countries
+where country_id in (select country_id from locations
+                     where location_id in (select location_id from departments));
+
 
 /*문제10.
 입사일이 03/12/31 일 이전 입사한 직원의 이름, 월급, 전화 번호, 입사일을 출력하세요
