@@ -117,11 +117,22 @@ and		dep.department_id = e.department_id;
 
 
 /*문제8. 평균 급여(salary)가 가장 높은 부서는?*/
-select  department_name
-from    departments d,
-        (select department_id, avg(salary) salary from employees group by department_id) s
-where s.department_id = d.department_id
-and   salary = (select max(salary) from (select avg(salary) salary from employees group by department_id));
+select	department_name
+from	departments d,
+		(select department_id, avg(salary) salary from employees group by department_id) s
+where	s.department_id = d.department_id
+and		salary = (select max(salary) from (select avg(salary) salary from employees group by department_id));
+
+select	department_name
+from	departments d,
+		(
+        select department_id
+        from    (select avg(salary) salary, department_id 
+                  from employees group by department_id)
+        where salary = (select max(salary) from (select avg(salary) salary, department_id 
+                                                 from employees group by department_id))
+        ) s
+where	s.department_id = d.department_id;
 
 
 /*문제9. 평균 급여(salary)가 가장 높은 지역은?*/
