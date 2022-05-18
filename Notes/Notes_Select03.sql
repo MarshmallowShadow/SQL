@@ -132,8 +132,58 @@ where d.salary = e.salary and
 --<rownum>
 --가로열 번호 생성
 select rownum, first_name, salary
+from employees;
+
+--rownum은 생성 후 정렬
+select rownum, first_name, salary
 from employees
 order by salary desc;
+
+/*
+처리 순서:
+1. FROM로 테이블 생성
+	>> 테이블로쿠터 Row읽은 후 rownum생성
+2. WHERE 조건맞는 데이터만 남김
+3. GROUP BY 별로 묶는다
+4. HAVING 조건 있는 그룹 남김
+5. SELECT 원하는 결과를 출력 >>(여기에서 rownum도 선택)
+6. ORDER BY 기준으로 정렬
+*/
+
+--정렬 후 생성은 되지만
+select rownum, first_name, salary
+from (select first_name, salary
+	  from employees
+	  order by salary desc);
+
+--이렇게 하면은 아무것도 안나옴... 왜인가?!
+select rownum, first_name, salary
+from (select first_name, salary
+	  from employees
+	  order by salary desc)
+where rownum > 2;
+/*
+	>> 테이블로쿠터 Row읽은 후 rownum생성 
+2. WHERE 조건맞는 데이터만 남김 <-------- 여기에서 한줄씩 처리하고 전 줄부터 반복 (rownum순서 '리셋')
+*/
+--WHERE문으로 1번 rownum 자르고 rownum 다시 1번부터 정렬 (즉, rownum 1이 아닌 데이터는 있을 수가 없다는 점)
+
+--아래같은 경우에는 리셋되어도 1자리는 유지되어서 잘릴 리가 없다는 점
+select rownum, first_name, salary
+from (select first_name, salary
+	  from employees
+	  order by salary desc)
+where rownum <= 5;
+
+--해결책: subquery로 정렬하고, 그 밖에subquery로 rownum(rn)생성하고 그리고 그 밖에 where로 row자르기 (거꾸로 해석 안부터)
+select rn, first_name, salary
+from (select rownum rn, first_name, salary --rownum "rn" 생성은 바로 안에
+	  from (select first_name,
+	  			   salary
+	  		from employees
+	  		order by salary desc) --정렬은 맨 안쪽에
+	  )
+where rn > 5 and rn <=10; --마지막 순위 뽑기
 
 --예: 급여를 가장 많이 받는 5명의 직원의 이름을 출력하시오.
 --오답
@@ -142,7 +192,14 @@ from employees
 where rownum < 6
 order by salary desc;
 
---정답 (비효율적이지만 언전적인)
+--불안정한 정답
+select rownum, first_name, salary
+from (select rownum, first_name, salary
+	  from employees
+	  order by salary desc)
+where rownum <= 5;
+
+--정답
 select rn, first_name, salary
 from (select rownum rn, first_name, salary
 	  from (select first_name,
@@ -152,10 +209,13 @@ from (select rownum rn, first_name, salary
 	  )
 where rn <= 5;
 
---정답2
-select rownum, first_name, salary
-from (select rownum, first_name, salary
-	  from employees
-	  order by salary desc)
-where rownum <= 5;
 
+--예2: 07년에 입사한 직원중 급여가 많은 직원중 3에서 7등의 이름 급여 입사일은?
+select rn, first_name, salary, hire_date
+from (select rownum rn, first_name, salary, hire_date
+	  from (select first_name, salary, hire_date
+	  		from employees
+	  		where hire_date >= '07/0101' and hire_date < '08/01/01'
+            order by salary desc)
+     )
+where rn >= 3 and rn <= 7;
