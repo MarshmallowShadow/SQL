@@ -216,7 +216,7 @@ select rn, first_name, salary, hire_date
 from (select rownum rn, first_name, salary, hire_date
 	  from (select first_name, salary, hire_date
 	  		from employees
-	  		where hire_date >= '07/0101' and hire_date < '08/01/01'
+	  		where hire_date >= '07/01/01' and hire_date < '08/01/01'
             order by salary desc)
      )
 where rn >= 3 and rn <= 7;

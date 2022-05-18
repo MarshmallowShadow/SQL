@@ -1,12 +1,12 @@
 /*문제1.
 담당 매니저가 배정되어있으나 커미션비율이 없고, 월급이 3000초과인 직원의
-이름, 매니저아이디, 커미션 비율, 월급 을 출력하세요. (45건)
+이름, 매니저아이디, 커미션비율, 월급을 출력하세요. (45건)
 */
-select first_name 이름, manager_id 매니저아이디, commission_pct "커미션 비율", salary 월급
-from employees
-where manager_id is not null and
-	  commission_pct is null and
-	  salary > 3000;
+select	first_name 이름, manager_id 매니저아이디, commission_pct 커미션비율, salary 월급
+from	employees
+where	manager_id is not null
+and		commission_pct is null
+and		salary > 3000;
 
 
 /*문제2.
@@ -37,12 +37,13 @@ order by salary desc;
 */
 select	g.manager_id 매니저아이디, m.first_name 매니저이름, hire_date
         매니저평균급여, 매니저별최소급여, 매니저별최대급여
-from	employees m, (
-                      select manager_id, round(avg(salary), 1) 매니저평균급여,
-							 min(salary) 매니저별최소급여, max(salary) 매니저별최대급여
-                      from (select * from employees where hire_date >= '05/01/01')
-                      group by manager_id
-                     ) g
+from	employees m,
+		(
+		select	manager_id, round(avg(salary), 1) 매니저평균급여,
+				min(salary) 매니저별최소급여, max(salary) 매니저별최대급여
+		from	(select * from employees where hire_date >= '05/01/01')
+		group by manager_id
+		) g
 where	g.manager_id = m.employee_id
 and		매니저평균급여 > 5000
 order by 매니저평균급여 desc;
@@ -59,9 +60,9 @@ select	e.employee_id 사번, e.first_name 이름, d.department_name 부서명,
 from	employees m, employees e 
 left outer join departments d
 on      e.department_id = d.department_id
-where e.manager_id = m.employee_id;
+where	e.manager_id = m.employee_id;
 
---오라클 형식
+--오라클only
 select	e.employee_id 사번, e.first_name 이름, d.department_name 부서명,
 		m.first_name 매니저이름
 from	employees m, employees e, departments d
@@ -92,26 +93,27 @@ where	rn >= 11 and rn <=20;
 */
 select	first_name || ' ' || last_name 이름, salary 연봉,
 		department_name 부서명, hire_date
-from employees e
+from	employees e
 left outer join departments d
-on e.department_id = d.department_id
-where hire_date in (select max(hire_date) from employees);
+on		e.department_id = d.department_id
+where	hire_date in (select max(hire_date) from employees);
+
 
 /*문제7.
 평균연봉(salary)이 가장 높은 부서 직원들의 직원번호(employee_id), 이름(firt_name), 성
 (last_name)과 업무(job_title), 연봉(salary)을 조회하시오.
 */
-select	employee_id 직원번호, first_name 이름, last_name 성, job_title 업무, d1.salary "AVG_SALARY", e.salary 연봉
+select	employee_id 직원번호, first_name 이름, last_name 성, job_title 업무, e.salary 연봉, dep.salary "AVG_SALARY"
 from	employees e, jobs j,
 		(
 		select  d.department_id, salary
 		from    departments d,
 		        (select department_id, avg(salary) salary from employees group by department_id) s
-		where s.department_id = d.department_id
-		and   salary = (select max(salary) from (select avg(salary) salary from employees group by department_id))
-		) d1
+		where	s.department_id = d.department_id
+		and		salary = (select max(salary) from (select avg(salary) salary from employees group by department_id))
+		) dep
 where	e.job_id = j.job_id
-and		d1.department_id = e.department_id;
+and		dep.department_id = e.department_id;
 
 
 /*문제8. 평균 급여(salary)가 가장 높은 부서는?*/
@@ -125,27 +127,37 @@ and   salary = (select max(salary) from (select avg(salary) salary from employee
 /*문제9. 평균 급여(salary)가 가장 높은 지역은?*/
 select  region_name
 from    regions r,
-        (select region_id, salary
-        from (select region_id, avg(salary) salary
-              from   (select r.region_id, region_name, salary
-                      from employees e, departments d, locations l, countries c, regions r
-                      where e.department_id = d.department_id
-                      and d.location_id = l.location_id
-                      and l.country_id = c.country_id
-                      and c.region_id = r.region_id)
-              group by region_id)
-         ) s
-where salary in (select max(salary)
-                 from (select region_id, avg(salary) salary
-                       from (select r.region_id, salary
-                             from employees e, departments d, locations l, countries c, regions r
-                             where e.department_id = d.department_id
-                             and d.location_id = l.location_id
-                             and l.country_id = c.country_id
-                             and c.region_id = r.region_id)
-                       group by region_id)
-                )
-and r.region_id = s.region_id;
+        (
+        select	region_id, salary
+        from	(
+        		select	region_id, avg(salary) salary
+				from	(
+						select	r.region_id, region_name, salary
+						from	employees e, departments d, locations l, countries c, regions r
+						where	e.department_id = d.department_id
+						and		d.location_id = l.location_id
+						and		l.country_id = c.country_id
+						and		c.region_id = r.region_id
+						)
+				group by region_id
+				)
+		) s
+where	r.region_id = s.region_id
+and		salary in	(
+					select	max(salary)
+					from	(
+							select	region_id, avg(salary) salary
+							from	(
+									select	r.region_id, salary
+									from	employees e, departments d, locations l, countries c, regions r
+									where	e.department_id = d.department_id
+									and		d.location_id = l.location_id
+									and		l.country_id = c.country_id
+									and		c.region_id = r.region_id
+									)
+							group by region_id
+							)
+                	);
 
 
 /*문제10. 평균 급여(salary)가 가장 높은 업무는?*/
@@ -156,7 +168,3 @@ where s.job_id = j.job_id
 and   salary = (select max(salary) from (select avg(salary) salary from employees group by job_id));
 
 
-
-
-
-		
