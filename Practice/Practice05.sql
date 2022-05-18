@@ -128,7 +128,7 @@ from	departments d,
 		(
         select department_id
         from    (select avg(salary) salary, department_id 
-                  from employees group by department_id)
+                 from employees group by department_id)
         where salary = (select max(salary) from (select avg(salary) salary, department_id 
                                                  from employees group by department_id))
         ) s
