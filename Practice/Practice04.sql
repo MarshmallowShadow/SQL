@@ -1,5 +1,5 @@
 -- 문제1. 평균 급여보다 적은 급여을 받는 직원은 몇명인지 구하시요.
-select count(salary)
+select count(*)
 from employees
 where salary < (select avg(salary) from employees);
 
