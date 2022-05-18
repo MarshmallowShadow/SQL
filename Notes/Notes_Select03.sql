@@ -185,6 +185,7 @@ from (select rownum rn, first_name, salary --rownum "rn" 생성은 바로 안에
 	  )
 where rn > 5 and rn <=10; --마지막 순위 뽑기
 
+
 --예: 급여를 가장 많이 받는 5명의 직원의 이름을 출력하시오.
 --오답
 select rownum, first_name, salary
