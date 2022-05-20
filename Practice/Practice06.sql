@@ -86,6 +86,11 @@ where author_name = '강풀';
 delete from author
 where author_name = '기안84';
 
+update author
+set author_name = '최문열',
+	author_desc = '서울특별시'
+where author_id = 1;
+
 
 --테이블 출력
 select  book_id, title, pubs, pub_date,
